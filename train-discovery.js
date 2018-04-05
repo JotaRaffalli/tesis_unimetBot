@@ -147,7 +147,7 @@ var uploadDocumentAsync = function(params, cb) {
  * @return {Object}
  */
 var uploadDocument = function(params, cb) {
-  var wrapped = async.timeout(uploadDocumentAsync, 2000);
+  var wrapped = async.timeout(uploadDocumentAsync, 8000);
   wrapped(params, function(err, res) {
     if (err) {
       console.log(params.file.path, err);

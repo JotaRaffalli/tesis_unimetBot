@@ -31,8 +31,9 @@ const conversation = new ConversationV1({ version: 'v1', version_date: '2017-04-
 conversation.listWorkspaces(function(err, response) {
   if (err) {
     return;
-  } else if (response.workspaces.length > 0 && response.workspaces[0].name === 'Car_Dashboard_New') {
+  } else if (response.workspaces.length > 0) {
     console.log('Workspace exists');
+    console.log("ESTE ES ID DEL W0 :"+response.workspaces[0].workspace_id);
     updateEnvProperties({
       regexText: 'REPLACE WITH YOUR WORKSPACE ID', 
       replacement: response.workspaces[0].workspace_id,
