@@ -15,7 +15,7 @@ class App extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.callWatson('hello');
+    this.callWatson();
   }
 
   callWatson(message) {
