@@ -1,15 +1,15 @@
-source .env; 
+source ./.env; 
 
 # Retrieve credentials from file
-CONVERSATION_USERNAME=`jq .conversation[].credentials.username credentials.json`;
-CONVERSATION_PASSWORD=`jq .conversation[].credentials.password credentials.json`;
-DISCOVERY_USERNAME=`jq .discovery[].credentials.username credentials.json`;
-DISCOVERY_PASSWORD=`jq .discovery[].credentials.password credentials.json`;
+CONVERSATION_USERNAME="1c2eb292-e8f5-4bcf-990f-4342814f0ced";
+CONVERSATION_PASSWORD="K4oTlz1fmkVm";
+DISCOVERY_USERNAME="50628cdb-2d16-4b34-b972-4e5867027425";
+DISCOVERY_PASSWORD="n5GZGlrxLzXn";
 
 # Create OpenWhisk Actions
 echo 'Creating OpenWhisk Actions...'
-export PACKAGE="assistant-with-discovery-openwhisk"
-bx wsk package create assistant-with-discovery-openwhisk
+export PACKAGE="assistant-with-discovery-openwhisk_v2"
+bx wsk package create assistant-with-discovery-openwhisk_v2
 bx wsk action create $PACKAGE/conversation actions/conversation.js --web true
 bx wsk  action create $PACKAGE/discovery actions/discovery.js --web true
 
