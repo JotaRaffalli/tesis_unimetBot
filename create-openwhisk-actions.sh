@@ -8,8 +8,8 @@ DISCOVERY_PASSWORD="n5GZGlrxLzXn";
 
 # Create OpenWhisk Actions
 echo 'Creating OpenWhisk Actions...'
-export PACKAGE="assistant-with-discovery-openwhisk_v2"
-bx wsk package create assistant-with-discovery-openwhisk_v2
+export PACKAGE="assistant-with-discovery-openwhisk"
+bx wsk package create assistant-with-discovery-openwhisk
 bx wsk action create $PACKAGE/conversation actions/conversation.js --web true
 bx wsk  action create $PACKAGE/discovery actions/discovery.js --web true
 

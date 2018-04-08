@@ -51,10 +51,12 @@ class App extends Component {
 
   handleResponse(responseJson) {
     if(responseJson.hasOwnProperty('output') && responseJson.output.hasOwnProperty('action') && responseJson.output.action.hasOwnProperty('call_discovery')) {
-      this.addMessage( { label: 'Discovery Result:', message: 'Great question. Here\'s what I found:', date: (new Date()).toLocaleTimeString()});
+      this.addMessage( { label: 'Discovery Result:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString()});
       this.formatDiscovery(responseJson.output.discoveryResults);
+      console.log(responseJson);
             
     } else {
+      console.log(responseJson);
       const outputMessage = responseJson.output.text.filter(text => text).join('\n');
       const outputIntent = responseJson.intents[0] ? responseJson.intents[0]['intent'] : '';
       const outputDate = responseJson.date.toLocaleTimeString();
