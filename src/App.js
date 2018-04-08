@@ -51,8 +51,15 @@ class App extends Component {
 
   handleResponse(responseJson) {
     if(responseJson.hasOwnProperty('output') && responseJson.output.hasOwnProperty('action') && responseJson.output.action.hasOwnProperty('call_discovery')) {
-      this.addMessage( { label: 'Discovery Result:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString()});
-      this.formatDiscovery(responseJson.output.discoveryResults);
+      if(responseJson.output.discoveryResults){
+        this.addMessage( { label: 'Discovery Result:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString()});
+        this.formatDiscovery(responseJson.output.discoveryResults);
+      }
+          else {
+            this.addMessage({ message: "Ups! No he encontrado nada relacionado." });
+          }
+      
+     
       console.log(responseJson);
             
     } else {
@@ -97,15 +104,18 @@ class App extends Component {
   }
 
   formatDiscovery(resultArr) {
-    resultArr.map(function(result, index) {
-      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={result.sourceUrl} linkText={'See full manual entry'} />;
-      this.addMessage({ message: formattedResult });
-    }.bind(this));
-        
-    this.setState({
-      discoveryNumber: this.state.discoveryNumber + 1
-    });
-    return(true);
+    
+      resultArr.map(function(result, index) {
+        const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={result.sourceUrl} linkText={'See full manual entry'} />;
+        this.addMessage({ message: formattedResult });
+      }.bind(this));
+          
+      this.setState({
+        discoveryNumber: this.state.discoveryNumber + 1
+      });
+      return(true);
+    
+
   }
 
   scrollToBottom() {
