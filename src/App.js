@@ -19,14 +19,16 @@ class App extends Component {
   }
 
   callWatson(message) {
-    const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const requestJson = JSON.stringify({
-      input: {
-        text: message
-      },
-      context: this.state.context
-    });
-    return fetch(watsonApiUrl,
+    //const watsonApiUrl = process.env.REACT_APP_API_URL;
+    const middleWareUrl = "http://localhost:5000/botkit/receive"
+    const requestJson = JSON.stringify(
+      {
+        text: message,
+        user: Math.floor((Math.random() * 10000) + 1),
+        channel: "webhook",
+        context: this.state.context
+      });
+    return fetch(middleWareUrl,
       {
         method: 'POST',
         headers: {
@@ -50,26 +52,26 @@ class App extends Component {
   }
 
   handleResponse(responseJson) {
-    if(responseJson.hasOwnProperty('output') && responseJson.output.hasOwnProperty('action') && responseJson.output.action.hasOwnProperty('call_discovery')) {
-      if(responseJson.output.discoveryResults.lenght == 0){
+    if(responseJson.watsonResponseData.hasOwnProperty('output') && responseJson.watsonResponseData.output.hasOwnProperty('action') && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
+      if(responseJson.watsonResponseData.output.discoveryResults.lenght == 0){
         this.addMessage( { label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString()});
-        this.formatDiscovery(responseJson.output.discoveryResults);
+        this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
       }
           else {
             this.addMessage({ message: "Ups! No he encontrado nada relacionado." });
           }
       
           this.setState({
-            context: responseJson.context
+            context: responseJson.watsonResponseData.context
           });
       console.log(responseJson);
             
     } else {
-      console.log(responseJson);
-      const outputMessage = responseJson.output.text.filter(text => text).join('\n');
-      const outputIntent = responseJson.intents[0] ? responseJson.intents[0]['intent'] : '';
-      const outputDate = responseJson.date.toLocaleTimeString();
-      const outputContext = responseJson.context;
+      console.log("Esta es la respuesta del middleware: ",responseJson);
+      const outputMessage = responseJson.watsonResponseData.output.text.filter(text => text).join('\n');
+      const outputIntent = responseJson.watsonResponseData.intents[0] ? responseJson.watsonResponseData.intents[0]['intent'] : '';
+      const outputDate =  new Date().toLocaleDateString();
+      const outputContext = responseJson.watsonResponseData.context;
       this.setState({
         context: outputContext
       });
@@ -134,8 +136,16 @@ class App extends Component {
     return(
       <div className="app-wrapper">
         <p className="conversation__intro">
-          Esta demostración muestra cómo el servicio Watson Assistant llama al servicio Discovery cuando no sabe cómo responder. Las llamadas a Watson Assistant y Discovery se realizan en OpenWhisk, la plataforma sin servidor de IBM.
+          Esta interfáz gráfica sirve como demostración de que el sistema de atención al cliente 
+          realizado, puede ser fácilmente integrado a cualquier plataforma o aplicacción front-end que la 
+          Universidad desee, gracias a la modularidad del mismo para distribuir el servicio a distintos 
+          canales de información.
         </p>
+{/*     <p className="conversation__intro">
+          El servicio esta configurado para activar el servicio Discovery cuando 
+          el Asistente no sabe cómo responder. Las llamadas a Watson Assistant y 
+          Discovery se realizan en OpenWhisk, la plataforma sin servidor o server-less de IBM.
+        </p> */}
         <Conversation
           onSubmit={this.handleSubmit}
           messageObjectList={this.state.messageObjectList}

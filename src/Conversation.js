@@ -26,7 +26,7 @@ function Conversation(props) {
         </div>
       </div>
       <div className="conversation__input-container">
-        <InputWithButton className="conversation__input" onSubmit={props.onSubmit} placeholder="Say something to Watson."/>
+        <InputWithButton className="conversation__input" onSubmit={props.onSubmit} placeholder="Escríbele algo a UnimetBot."/>
       </div>
     </div>
   );
