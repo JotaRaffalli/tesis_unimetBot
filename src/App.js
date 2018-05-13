@@ -11,10 +11,12 @@ class App extends Component {
       context: {},
       // A Message Object consists of a message[, intent, date, isUser]
       messageObjectList: [],
+      inputfield: "",
       discoveryNumber: 0
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateInput = this.updateInput.bind(this);
     this.callWatson();
   }
 
@@ -102,11 +104,16 @@ class App extends Component {
       date: formattedDate,
       hasTail: true
     };
+    this.setState({inputfield:""})
     this.addMessage(msgObj);
     e.target.value = '';
     this.callWatson(inputMessage);
   }
 
+  updateInput (e) {
+    console.log(e.target.value)
+    this.setState({inputfield:e.target.value})
+  }
   formatDiscovery(resultArr) {
     
       resultArr.map(function(result, index) {
@@ -147,7 +154,9 @@ class App extends Component {
           Discovery se realizan en OpenWhisk, la plataforma sin servidor o server-less de IBM.
         </p> */}
         <Conversation
+          inputfield={this.state.inputfield}
           onSubmit={this.handleSubmit}
+          onChange={this.updateInput}
           messageObjectList={this.state.messageObjectList}
         />
       </div>
