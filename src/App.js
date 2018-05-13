@@ -20,7 +20,7 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "http://middleware-pipeline.mybluemix.net/botkit/receive"
+    const middleWareUrl = "https://middleware-pipeline.mybluemix.net/botkit/receive"
     const requestJson = JSON.stringify(
       {
         text: message,
