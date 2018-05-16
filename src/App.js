@@ -28,7 +28,6 @@ class App extends Component {
         text: message,
         user: Math.floor((Math.random() * 10000) + 1),
         channel: "webhook",
-        context: this.state.context
       });
     return fetch(middleWareUrl,
       {
@@ -47,6 +46,7 @@ class App extends Component {
     })
       .then((responseJson) => {
         responseJson.date = new Date();
+        console.log("Esta es la respuesta del middleware: ",responseJson);
         this.handleResponse(responseJson);
       }).catch(function(error) {
         throw error;
@@ -66,10 +66,10 @@ class App extends Component {
           this.setState({
             context: responseJson.watsonResponseData.context
           });
-      console.log(responseJson);
+      
             
     } else {
-      console.log("Esta es la respuesta del middleware: ",responseJson);
+
       const outputMessage = responseJson.watsonResponseData.output.text.filter(text => text).join('\n');
       const outputIntent = responseJson.watsonResponseData.intents[0] ? responseJson.watsonResponseData.intents[0]['intent'] : '';
       const outputDate =  new Date().toLocaleDateString();
