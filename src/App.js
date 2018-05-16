@@ -36,7 +36,8 @@ class App extends Component {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: requestJson
+        body: requestJson,
+        context: this.state.context
       }
     ).then((response) => {
       if(!response.ok) {
