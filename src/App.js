@@ -28,16 +28,18 @@ class App extends Component {
         text: message,
         user: Math.floor((Math.random() * 10000) + 1),
         channel: "webhook",
+        context: this.state.context
       });
     return fetch(middleWareUrl,
       {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin':'*'
         },
         body: requestJson,
-        context: this.state.context
       }
     ).then((response) => {
       if(!response.ok) {
@@ -55,7 +57,7 @@ class App extends Component {
   }
 
   handleResponse(responseJson) {
-    if(responseJson.watsonResponseData.hasOwnProperty('output') && responseJson.watsonResponseData.output.hasOwnProperty('action') && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
+    if(responseJson.watsonResponseData.hasOwnProperty('output') && responseJson.watsonResponseData.output.hasOwnProperty('action') && responseJson.watsonResponseData.output.action[0] === 'call_discovery') {
       if(responseJson.watsonResponseData.output.discoveryResults.lenght == 0){
         this.addMessage( { label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString()});
         this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
