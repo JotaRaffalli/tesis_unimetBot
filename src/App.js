@@ -9,10 +9,12 @@ class App extends Component {
 
     this.state = {
       context: {},
+      user: Math.floor((Math.random() * 10000) + 1),
       // A Message Object consists of a message[, intent, date, isUser]
       messageObjectList: [],
       inputfield: "",
-      discoveryNumber: 0
+      discoveryNumber: 0,
+      output: {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,9 +28,10 @@ class App extends Component {
     const requestJson = JSON.stringify(
       {
         text: message,
-        user: Math.floor((Math.random() * 10000) + 1),
+        user: this.state.user,
         channel: "webhook",
-        context: this.state.context
+        context: this.state.context,
+        output: this.state.output,
       });
     return fetch(middleWareUrl,
       {
@@ -78,7 +81,8 @@ class App extends Component {
       const outputDate =  new Date().toLocaleDateString();
       const outputContext = responseJson.watsonResponseData.context;
       this.setState({
-        context: outputContext
+        context: outputContext,
+        output: responseJson.watsonResponseData.output
       });
       const msgObj = {
         position: 'left',
