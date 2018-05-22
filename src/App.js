@@ -23,7 +23,7 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "http://localhost:5000/botkit/receive"
+    const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
       this.state.user = id
@@ -45,7 +45,7 @@ class App extends Component {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Access-Control-Allow-Origin':'*'
+          'Access-Control-Allow-Origin': '*'
         },
         body: requestJson,
       }
@@ -57,7 +57,7 @@ class App extends Component {
     })
       .then((responseJson) => {
         responseJson.date = new Date();
-        console.log("Esta es la respuesta del middleware: ",responseJson);
+        console.log("Esta es la respuesta del middleware: ", responseJson);
         this.handleResponse(responseJson);
       }).catch(function (error) {
         throw error;
@@ -65,51 +65,85 @@ class App extends Component {
   }
 
   handleResponse(responseJson) {
-    if (responseJson.hasOwnProperty('watsonData') && responseJson.watsonData.hasOwnProperty('output')) {
-      if (responseJson.watsonData.hasOwnProperty('output') 
-      && responseJson.watsonData.output.hasOwnProperty('action') 
-      && responseJson.watsonData.output.action.hasOwnProperty('call_discovery')) {
-        if (responseJson.watsonData.output.discoveryResults.lenght == 0) {
+    if (responseJson.hasOwnProperty('watsonResponseData') && responseJson.watsonResponseData.hasOwnProperty('output')) {
+      if (responseJson.watsonResponseData.hasOwnProperty('output')
+        && responseJson.watsonResponseData.output.hasOwnProperty('action')
+        && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
+        if (responseJson.watsonResponseData.output.discoveryResults.length == 0) {
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
-          this.formatDiscovery(responseJson.watsonData.output.discoveryResults);
+          this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
         else {
           this.addMessage({ message: "Ups! No he encontrado nada relacionado." });
         }
         this.setState({
-          context: responseJson.watsonData.context
+          context: responseJson.watsonResponseData.context
         });
       } else {
-        const outputMessage = responseJson.watsonData.output.text.filter(text => text).join('\n');
-        const outputIntent = responseJson.watsonData.intents[0] ? responseJson.watsonData.intents[0]['intent'] : '';
+
+        const outputIntent = responseJson.watsonResponseData.intents[0] ? responseJson.watsonResponseData.intents[0]['intent'] : '';
         const outputDate = new Date().toLocaleDateString();
-        const outputContext = responseJson.watsonData.context;
+        const outputContext = responseJson.watsonResponseData.context;
         this.setState({
           context: outputContext
         });
-        const msgObj = {
-          position: 'left',
-          label: outputIntent,
-          message: outputMessage,
-          date: outputDate,
-          hasTail: true
-        };
-        this.addMessage(msgObj);
+        var i;
+        console.log('prueba2', responseJson.watsonResponseData.output.text.length)
+
+        for (i = 0; i < responseJson.watsonResponseData.output.text.length; i++) {
+          console.log(i)
+          var outputMessage = responseJson.watsonResponseData.output.text[i]
+          if (i == 0) {
+            var msgObj = {
+              position: 'left',
+              label: outputIntent,
+              message: outputMessage,
+              date: outputDate,
+              hasTail: true
+            };
+          }else{
+            var msgObj = {
+              position: 'left',
+              message: outputMessage,
+              date: outputDate,
+              hasTail: true
+            };
+          }
+          this.addMessage(msgObj);
+        }
       }
     } else {
       const outputDate = new Date().toLocaleDateString();
-      const msgObj = {
-        position: 'left',
-        //label: outputIntent,
-        message: responseJson.text,
-        date: outputDate,
-        hasTail: true
-      };
-      this.addMessage(msgObj);
+      const outputIntent = responseJson.watsonResponseData.intents[0] ? responseJson.watsonResponseData.intents[0]['intent'] : '';
+      var i;
+      console.log('prueba', responseJson.watsonResponseData.output.text.length)
+      for (i = 0; i < responseJson.watsonResponseData.output.text.length; i++) {
+        console.log(i)
+        var outputMessage = responseJson.watsonResponseData.output.text[i]
+        if (i == 0) {
+          var msgObj = {
+            position: 'left',
+            label: outputIntent,
+            message: outputMessage,
+            date: outputDate,
+            hasTail: true
+          };
+        }else{
+          var msgObj = {
+            position: 'left',
+            message: outputMessage,
+            date: outputDate,
+            hasTail: true
+          };
+        }
+        this.addMessage(msgObj);
+      }
+
     }
   }
 
   addMessage(msgObj) {
+    console.log("mensaje", msgObj)
     this.setState({
       messageObjectList: [...this.state.messageObjectList, msgObj]
     });
