@@ -24,14 +24,11 @@ class App extends Component {
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
     const middleWareUrl = "http://localhost:5000/botkit/receive"
-    console.log("LLAMAR", message)
-    console.log(this.state)
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
-      console.log("entre", id)
       this.state.user = id
     }
-    console.log(this.state)
+    console.log("state", this.state)
     const requestJson = JSON.stringify(
       {
         text: message,
@@ -44,11 +41,13 @@ class App extends Component {
     return fetch(middleWareUrl,
       {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin':'*'
         },
-        body: requestJson
+        body: requestJson,
       }
     ).then((response) => {
       if (!response.ok) {
@@ -58,6 +57,7 @@ class App extends Component {
     })
       .then((responseJson) => {
         responseJson.date = new Date();
+        console.log("Esta es la respuesta del middleware: ",responseJson);
         this.handleResponse(responseJson);
       }).catch(function (error) {
         throw error;
@@ -65,7 +65,6 @@ class App extends Component {
   }
 
   handleResponse(responseJson) {
-    console.log(responseJson)
     if (responseJson.hasOwnProperty('watsonData') && responseJson.watsonData.hasOwnProperty('output')) {
       if (responseJson.watsonData.hasOwnProperty('output') 
       && responseJson.watsonData.output.hasOwnProperty('action') 
@@ -80,9 +79,7 @@ class App extends Component {
         this.setState({
           context: responseJson.watsonData.context
         });
-        console.log(responseJson);
       } else {
-        console.log("Esta es la respuesta del middleware: ", responseJson);
         const outputMessage = responseJson.watsonData.output.text.filter(text => text).join('\n');
         const outputIntent = responseJson.watsonData.intents[0] ? responseJson.watsonData.intents[0]['intent'] : '';
         const outputDate = new Date().toLocaleDateString();
@@ -135,7 +132,6 @@ class App extends Component {
   }
 
   updateInput(e) {
-    //console.log(e.target.value)
     this.setState({ inputfield: e.target.value })
   }
   formatDiscovery(resultArr) {
