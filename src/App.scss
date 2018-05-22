@@ -1,5 +1,5 @@
 $app-intro-color: rgb(199, 199, 199);
-
+$break-small: 480px;
 
 html, body {
     height: 100%;
@@ -26,5 +26,8 @@ html, body {
     &__intro {
         text-align: center;
         color: $app-intro-color;
+        @media screen and (max-width: $break-small) {
+            display: none;
+          }
     }
 }

@@ -1,7 +1,6 @@
 {
   "rules": {
     ".read": "auth != null",
-    ".write": "auth != null",
-    ".idenxOn":"carnet"
+    ".write": "auth != null"
   }
 }

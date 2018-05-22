@@ -9,11 +9,12 @@ class App extends Component {
 
     this.state = {
       context: {},
-      user: null,
+      user: Math.floor((Math.random() * 10000) + 1),
       // A Message Object consists of a message[, intent, date, isUser]
       messageObjectList: [],
       inputfield: "",
-      discoveryNumber: 0
+      discoveryNumber: 0,
+      output: {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +35,8 @@ class App extends Component {
         text: message,
         user: this.state.user,
         channel: "webhook",
-        context: this.state.context
+        context: this.state.context,
+        output: this.state.output,
       });
 
     console.log("request", requestJson)
