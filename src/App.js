@@ -24,8 +24,8 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    //const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
-    const middleWareUrl = "http://localhost:5000/botkit/receive"
+    const middleWareUrl = "https://middleware-pipeline.mybluemix.net/botkit/receive"
+    //const middleWareUrl = "http://localhost:5000/botkit/receive"
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
       this.state.user = id
@@ -72,7 +72,7 @@ class App extends Component {
       if (responseJson.watsonResponseData.hasOwnProperty('output')
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
         && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
-        if (responseJson.watsonResponseData.output.discoveryResults.length == 0) {
+        if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
