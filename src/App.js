@@ -203,6 +203,7 @@ class App extends Component {
           inputfield={this.state.inputfield}
           onSubmit={this.handleSubmit}
           onChange={this.updateInput}
+          onInput={this.updateInput}
           messageObjectList={this.state.messageObjectList}
         />
       </div>
