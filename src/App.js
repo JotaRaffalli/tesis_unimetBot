@@ -24,7 +24,8 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
+    const middleWareUrl = "https://middleware-pipeline.mybluemix.net/botkit/receive"
+    //const middleWareUrl = "http://localhost:5000/botkit/receive"
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
       this.state.user = id
@@ -71,7 +72,7 @@ class App extends Component {
       if (responseJson.watsonResponseData.hasOwnProperty('output')
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
         && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
-        if (responseJson.watsonResponseData.output.discoveryResults.length == 0) {
+        if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
@@ -113,35 +114,24 @@ class App extends Component {
           }
           this.addMessage(msgObj);
         }
+        if (responseJson.watsonResponseData.output.text.length==0){
+          this.callWatson('callback')
+        }
       }
     } else {
       const outputDate = new Date().toLocaleDateString();
-      const outputIntent = responseJson.watsonResponseData.intents[0] ? responseJson.watsonResponseData.intents[0]['intent'] : '';
-      var i;
-      console.log('prueba', responseJson.watsonResponseData.output.text.length)
-      for (i = 0; i < responseJson.watsonResponseData.output.text.length; i++) {
-        console.log(i)
-        var outputMessage = responseJson.watsonResponseData.output.text[i]
-        if (i == 0) {
-          var msgObj = {
-            position: 'left',
-            label: outputIntent,
-            message: outputMessage,
-            date: outputDate,
-            hasTail: true
-          };
-        }else{
+      const outputMessage = "Vaya, ha ocurrido un error. Intente más tarde."
           var msgObj = {
             position: 'left',
             message: outputMessage,
             date: outputDate,
             hasTail: true
           };
-        }
+        
         this.addMessage(msgObj);
       }
 
-    }
+    
   }
 
   addMessage(msgObj) {
