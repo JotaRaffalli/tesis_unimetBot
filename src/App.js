@@ -19,7 +19,7 @@ class App extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateInput = this.updateInput.bind(this);
-    this.callWatson();
+    this.callWatson('hola');
   }
 
   callWatson(message) {
@@ -203,6 +203,7 @@ class App extends Component {
           inputfield={this.state.inputfield}
           onSubmit={this.handleSubmit}
           onChange={this.updateInput}
+          onInput={this.updateInput}
           messageObjectList={this.state.messageObjectList}
         />
       </div>
