@@ -24,8 +24,8 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
-    //const middleWareUrl = "http://localhost:5000/botkit/receive"
+    //const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
+    const middleWareUrl = "http://localhost:5000/botkit/receive"
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
       this.state.user = id
@@ -62,7 +62,16 @@ class App extends Component {
         responseJson.date = new Date();
         console.log("Esta es la respuesta del middleware: ", responseJson);
         this.handleResponse(responseJson);
-      }).catch(function (error) {
+      }).catch( (error)=> {
+        const outputDate = new Date().toLocaleDateString();
+        const outputMessage = "¡Vaya!, ha ocurrido un error. Por favor, intente más tarde."
+        var msgObj = {
+          position: 'left',
+          message: outputMessage,
+          date: outputDate,
+          hasTail: true
+        };
+        this.addMessage(msgObj);
         throw error;
       });
   }
@@ -104,7 +113,7 @@ class App extends Component {
               date: outputDate,
               hasTail: true
             };
-          }else{
+          } else {
             var msgObj = {
               position: 'left',
               message: outputMessage,
@@ -114,24 +123,24 @@ class App extends Component {
           }
           this.addMessage(msgObj);
         }
-        if (responseJson.watsonResponseData.output.text.length==0){
+        if (responseJson.watsonResponseData.output.text.length == 0) {
           this.callWatson('callback')
         }
       }
     } else {
       const outputDate = new Date().toLocaleDateString();
       const outputMessage = "Vaya, ha ocurrido un error. Intente más tarde."
-          var msgObj = {
-            position: 'left',
-            message: outputMessage,
-            date: outputDate,
-            hasTail: true
-          };
-        
-        this.addMessage(msgObj);
-      }
+      var msgObj = {
+        position: 'left',
+        message: outputMessage,
+        date: outputDate,
+        hasTail: true
+      };
 
-    
+      this.addMessage(msgObj);
+    }
+
+
   }
 
   addMessage(msgObj) {
