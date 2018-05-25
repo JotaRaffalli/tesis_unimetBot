@@ -80,8 +80,9 @@ class App extends Component {
     if (responseJson.hasOwnProperty('watsonResponseData') && responseJson.watsonResponseData.hasOwnProperty('output')) {
       if (responseJson.watsonResponseData.hasOwnProperty('output')
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
-        && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
+        && responseJson.watsonResponseData.output.action[0].name == "discovery") {
         if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
+          console.log("Si entro")
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
