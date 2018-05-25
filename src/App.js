@@ -163,7 +163,7 @@ class App extends Component {
   formatDiscovery(resultArr) {
 
     resultArr.map(function (result, index) {
-      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={result.sourceUrl} linkText={'See full manual entry'} />;
+      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={"www.sirius.com"} linkText={'Ver más sobre lo que encontré'} />;
       this.addMessage({ message: formattedResult });
     }.bind(this));
 
