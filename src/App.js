@@ -24,7 +24,7 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
+    const middleWareUrl = "https://middleware-pipeline.mybluemix.net/botkit/receive"
     //const middleWareUrl = "http://localhost:5000/botkit/receive"
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1)
@@ -62,16 +62,7 @@ class App extends Component {
         responseJson.date = new Date();
         console.log("Esta es la respuesta del middleware: ", responseJson);
         this.handleResponse(responseJson);
-      }).catch( (error)=> {
-        const outputDate = new Date().toLocaleDateString();
-        const outputMessage = "¡Vaya!, ha ocurrido un error. Por favor, intente más tarde."
-        var msgObj = {
-          position: 'left',
-          message: outputMessage,
-          date: outputDate,
-          hasTail: true
-        };
-        this.addMessage(msgObj);
+      }).catch(function (error) {
         throw error;
       });
   }
@@ -80,9 +71,8 @@ class App extends Component {
     if (responseJson.hasOwnProperty('watsonResponseData') && responseJson.watsonResponseData.hasOwnProperty('output')) {
       if (responseJson.watsonResponseData.hasOwnProperty('output')
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
-        && responseJson.watsonResponseData.output.action[0].name == "discovery") {
+        && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
         if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
-          console.log("Si entro")
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
@@ -114,7 +104,7 @@ class App extends Component {
               date: outputDate,
               hasTail: true
             };
-          } else {
+          }else{
             var msgObj = {
               position: 'left',
               message: outputMessage,
@@ -124,24 +114,24 @@ class App extends Component {
           }
           this.addMessage(msgObj);
         }
-        if (responseJson.watsonResponseData.output.text.length == 0) {
+        if (responseJson.watsonResponseData.output.text.length==0){
           this.callWatson('callback')
         }
       }
     } else {
       const outputDate = new Date().toLocaleDateString();
       const outputMessage = "Vaya, ha ocurrido un error. Intente más tarde."
-      var msgObj = {
-        position: 'left',
-        message: outputMessage,
-        date: outputDate,
-        hasTail: true
-      };
+          var msgObj = {
+            position: 'left',
+            message: outputMessage,
+            date: outputDate,
+            hasTail: true
+          };
+        
+        this.addMessage(msgObj);
+      }
 
-      this.addMessage(msgObj);
-    }
-
-
+    
   }
 
   addMessage(msgObj) {
@@ -173,7 +163,7 @@ class App extends Component {
   formatDiscovery(resultArr) {
 
     resultArr.map(function (result, index) {
-      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={"www.sirius.com"} linkText={'Ver más sobre lo que encontré'} />;
+      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={result.sourceUrl} linkText={'See full manual entry'} />;
       this.addMessage({ message: formattedResult });
     }.bind(this));
 
@@ -222,3 +212,4 @@ class App extends Component {
 }
 
 export default App;
+
