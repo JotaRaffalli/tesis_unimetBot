@@ -24,13 +24,13 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    const middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive"
-    //const middleWareUrl = "http://localhost:5000/botkit/receive"
+    let middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive";
+    const localHostUrl = "http://localhost:5000/botkit/receive";
     if (this.state.user == null) {
-      let id = Math.floor((Math.random() * 10000) + 1)
-      this.state.user = id
+      let id = Math.floor((Math.random() * 10000) + 1);
+      this.state.user = id;
     }
-    console.log("state", this.state)
+
     const requestJson = JSON.stringify(
       {
         text: message,
@@ -40,8 +40,8 @@ class App extends Component {
         output: this.state.output,
       });
 
-    console.log("request", requestJson)
-    return fetch(middleWareUrl,
+    console.log("Request payload: ", requestJson);
+    fetch(middleWareUrl,
       {
         method: 'POST',
         mode: 'cors',
@@ -52,17 +52,18 @@ class App extends Component {
         },
         body: requestJson,
       }
-    ).then((response) => {
+    ).then( async (response) => {
       if (!response.ok) {
         throw response;
       }
-      return (response.json());
-    })
-      .then((responseJson) => {
+      let x = await response.json();
+      return x;
+    }).then((responseJson) => {
         responseJson.date = new Date();
         console.log("Esta es la respuesta del middleware: ", responseJson);
         this.handleResponse(responseJson);
       }).catch( (error)=> {
+        console.log("Hubo un error : ",error);
         const outputDate = new Date().toLocaleDateString();
         const outputMessage = "¡Vaya!, ha ocurrido un error. Por favor, intente más tarde."
         var msgObj = {
@@ -82,7 +83,7 @@ class App extends Component {
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
         && responseJson.watsonResponseData.output.action[0].name == "discovery") {
         if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
-          console.log("Si entro")
+          console.log("Sí entra a discovery");
           this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
