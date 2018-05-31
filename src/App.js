@@ -84,7 +84,7 @@ class App extends Component {
         && responseJson.watsonResponseData.output.action[0].name == "discovery") {
         if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
           console.log("Sí entra a discovery");
-          this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
+          this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he encontrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
         else {
