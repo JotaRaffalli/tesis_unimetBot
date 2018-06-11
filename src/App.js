@@ -71,9 +71,10 @@ class App extends Component {
     if (responseJson.hasOwnProperty('watsonResponseData') && responseJson.watsonResponseData.hasOwnProperty('output')) {
       if (responseJson.watsonResponseData.hasOwnProperty('output')
         && responseJson.watsonResponseData.output.hasOwnProperty('action')
-        && responseJson.watsonResponseData.output.action.hasOwnProperty('call_discovery')) {
+        && responseJson.watsonResponseData.output.action.length !== 0
+        && responseJson.watsonResponseData.output.action[0].name =='discovery') {
         if (responseJson.watsonResponseData.output.discoveryResults.length !== 0) {
-          this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he econtrado:', date: (new Date()).toLocaleTimeString() });
+          this.addMessage({ label: 'Resultado de Discovery:', message: 'Buena pregunta. Esto es lo que he encontrado:', date: (new Date()).toLocaleTimeString() });
           this.formatDiscovery(responseJson.watsonResponseData.output.discoveryResults);
         }
         else {
@@ -163,7 +164,7 @@ class App extends Component {
   formatDiscovery(resultArr) {
 
     resultArr.map(function (result, index) {
-      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} link={result.sourceUrl} linkText={'See full manual entry'} />;
+      const formattedResult = <DiscoveryResult key={'d' + this.state.discoveryNumber + index} title={result.title} preview={result.bodySnippet} />;
       this.addMessage({ message: formattedResult });
     }.bind(this));
 
