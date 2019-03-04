@@ -1,3 +1,16 @@
+# Unimet Bot 
+
+Artificial intelligence University chatbot. This system was made to attend the costumer service area of an university through the use of Natural Language Processing services ( like IBM Watson assistant) to help users with common requirements. The goal was to reduce the monopolization of contact channels and satisfy client needs in a quick and comfortable way, at whatever time, place, platform and channel of choice. 
+
+It consisted in an series of microservices, a middleware of data control, a custom user interface and the integrations of multiple channels like Slack, Facebook Messenger and Twilio. It was part of my Systems Engineering career thesis which received honors.
+
+### Frontend module example 
+This module in particular has a **Front** client side example made with React js.
+It is based on IBM official source code of serverless Watson's services made with **OpenWhisk**.
+Below you can find their docs with full explanation of their desired architecture.
+
+---
+
 # Watson Assistant (formerly Conversation) with Discovery - OpenWhisk
 
 
