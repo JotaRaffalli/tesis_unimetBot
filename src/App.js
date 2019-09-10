@@ -24,7 +24,7 @@ class App extends Component {
 
   callWatson(message) {
     //const watsonApiUrl = process.env.REACT_APP_API_URL;
-    let middleWareUrl = "https:/middleware-pipeline.mybluemix.net/botkit/receive";
+    let middleWareUrl = "https://cors-anywhere.herokuapp.com/https:/middleware-pipeline.mybluemix.net/botkit/receive";
     const localHostUrl = "http://localhost:5000/botkit/receive";
     if (this.state.user == null) {
       let id = Math.floor((Math.random() * 10000) + 1);
